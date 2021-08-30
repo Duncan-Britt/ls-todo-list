@@ -27,16 +27,26 @@ get "/lists" do
   erb :lists, layout: :layout
 end
 
+# Return an error messsage if the name is invalid. Return nil otherwise
+def error_for_list_name(name)
+  if !(1..100).cover? name.size
+    "List name must be between 1 and 100 characters"
+  elsif session[:lists].any? { |list| list[:name] == name }
+    "List name must be unique"
+  end
+end
+
 # Create a new list
 post "/lists" do
   list_name = params[:list_name].strip
-  if (1..100).cover? list_name.size
+
+  if error = error_for_list_name(list_name)
+    session[:error] = error
+    erb :new_list, layout: :layout
+  else
     session[:lists] << { name: list_name, todos: [] }
     session[:success] = "The list has been created."
     redirect "/lists"
-  else
-    session[:error] = "The list name must be between 1 and 100 characters."
-    erb :new_list, layout: :layout
   end
 end
 
