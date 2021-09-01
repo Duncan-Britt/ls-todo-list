@@ -1,4 +1,4 @@
-<section class="<%= "complete" if completed?(@list) %>" id="todos">
+<section class="<%== "complete" if completed?(@list) %>" id="todos">
   <header>
     <h2><%= @list[:name] %></h2>
     <ul>
@@ -13,7 +13,7 @@
 
   <ul>
     <% @list[:todos].each_with_index do |todo, index| %>
-      <li class="<%= "complete" if todo[:completed] %>">
+      <li class="<%== "complete" if todo[:completed] %>">
         <form action="/lists/<%= @id %>/todos/<%= index %>" method="post" class="check">
           <input type="hidden" name="completed" value="<%= !todo[:completed] %>" />
           <button type="submit">Complete</button>
