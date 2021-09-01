@@ -83,9 +83,13 @@ end
 # View list
 get "/lists/:id" do
   @id = params[:id].to_i
-  @list = session[:lists][@id]
-  @list[:todos].sort_by! { |todo| todo[:completed] ? 1 : 0 }
-  erb :list, layout: :layout
+  if @list = session[:lists][@id]
+    @list[:todos].sort_by! { |todo| todo[:completed] ? 1 : 0 }
+    erb :list, layout: :layout
+  else
+    session[:error] = "The specified list was not found"
+    redirect "/lists"
+  end
 end
 
 # Edit an existing todo list
