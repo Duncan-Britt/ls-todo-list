@@ -172,7 +172,7 @@ end
 # Delete todo
 post "/lists/:list_id/todos/:todo_id/destroy" do
   list_id = params[:list_id].to_i
-  todos = session[:lists][list_id][:todos]
+  todos = session[:lists].find { |list| list[:id] == list_id }[:todos]
   todo_id = params[:todo_id].to_i
   a = todos.detect { |todo| todo[:id] == todo_id }
   idx = todos.find_index(a)
@@ -190,7 +190,7 @@ end
 post "/lists/:list_id/todos/:todo_id" do
   list_id = params[:list_id].to_i
   todo_id = params[:todo_id].to_i
-  list = session[:lists][list_id]
+  list = session[:lists].find { |list| list[:id] == list_id }
 
   is_completed = params[:completed] == "true"
 
@@ -205,7 +205,7 @@ end
 # Mark all todos as complete
 post "/lists/:list_id/complete_all" do
   list_id = params[:list_id].to_i
-  list = session[:lists][list_id]
+  list = session[:lists].find { |list| list[:id] == list_id }
 
   list[:todos].each { |todo| todo[:completed] = true }
   session[:success] = "The list has been completed"
